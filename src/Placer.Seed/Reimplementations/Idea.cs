@@ -8,15 +8,21 @@ namespace Placer.Seed.Reimplementations
   {
     #region Constructors
     public Idea() { }
-    public Idea(string name) : base()
+    public Idea(Scope scope, string name, int x = 0, int y = 0, int z = 0) : base()
     {
+      if (scope != null)
+      {
+        this.Scope = scope;
+        this.ScopeLocation = new Core.ScopeLocation(x, y, z);
+      }
       this.Name = name;
     }
     #endregion
     public Thing DefinitionAssignment => (Thing)Things.Last(item => true);
     public Thing AddDefinition(ThingDefinition definition)
     {
-      if (definition == null) { 
+      if (definition == null)
+      {
         throw new ArgumentNullException("definition cannot be null");
       }
       this.Things ??= new List<Core.Thing>();

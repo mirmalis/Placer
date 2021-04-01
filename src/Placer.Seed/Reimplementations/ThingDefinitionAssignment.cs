@@ -24,7 +24,7 @@ namespace Placer.Seed.Reimplementations
     }
     public Thing AddValue(Core.FieldDefinition fieldDefinition, Core.Value value)
     {
-      this.FieldInstances ??= new List<Core.FieldOfThing>();
+      this.FieldInstances ??= new List<Core.Field<Core.Thing>>();
       var result = new FieldOfThing(this, fieldDefinition, value);
       this.FieldInstances.Add(result);
       return this;

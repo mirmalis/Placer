@@ -5,9 +5,16 @@ namespace Placer.Db
 {
   public class PlacerContext : DbContext
   {
+    public DbSet<Core.Scope> Scopes { get; set; }
     public DbSet<Core.Idea> Ideas { get; set; }
-    public DbSet<Core.Thing> Things { get; set; }
+
     public DbSet<Core.ThingDefinition> ThingDefinitions { get; set; }
+    public DbSet<Core.Thing> Things { get; set; }
+    public DbSet<Core.RelationDefinition> RelationDefinitions { get; set; }
+    public DbSet<Core.Relation> Relations { get; set; }
+    public DbSet<Core.FieldDefinition> FieldDefinitions { get; set; }
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       base.OnConfiguring(optionsBuilder);
@@ -26,7 +33,7 @@ namespace Placer.Db
       mb.Entity<Core.Thing>().HasMany(item => item.RelationsFrom).WithOne(item => item.From);
       mb.Entity<Core.Thing>().HasMany(item => item.RelationsTo).WithOne(item => item.To);
       // Owns
-      mb.Entity<Core.FieldOfThing>().OwnsOne(
+      mb.Entity<Core.Field<Core.Thing>>().OwnsOne(
         item => item.Value,
         sa =>
         {
@@ -35,7 +42,7 @@ namespace Placer.Db
           sa.Ignore(item => item.DateTime);
         }
       );
-      mb.Entity<Core.FieldOfRelation>().OwnsOne(
+      mb.Entity<Core.Field<Core.Relation>>().OwnsOne(
         item => item.Value,
         sa =>
         {

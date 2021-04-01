@@ -1,0 +1,29 @@
+﻿@using Api1.Types.Idea
+@inherits GG<I, Shallow, Deep, Guid>
+@inject Client client
+<Named Name="@Common?.Name"
+       Href="@($"/idea/{ID}")"
+       LinkType="@this.LinkType"
+       onClickCallback="@ToggleExpand" />
+
+@if (Expanded)
+{
+  @if (IsDeep)
+  {
+    @if (Deep.Things.Any())
+    {
+      @foreach (var item in Deep.Things)
+      {
+        <div>
+          <Placer.Wasm1.Components.Thing ParamID="@item.ID" ParamShallow="@item" ParamShowIdea="false" ParamExpandable="false" 
+                                         ParamDefinitionAsName="true"
+                                         />
+        </div>
+      }
+    }
+  }
+}
+@code {
+  protected override async Task<Deep> GetDeep() => await client.GetIdea(ID);
+
+}

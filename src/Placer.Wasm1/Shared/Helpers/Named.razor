@@ -1,0 +1,41 @@
+﻿@namespace Placer.Wasm1.Shared
+
+@if (string.IsNullOrEmpty(Href))
+{
+  <span class="@cls" @onclick="onClickCallback">
+    @text
+  </span>
+}
+else
+{
+  @switch (LinkType)
+  {
+    case LinkTypes.None:
+      <span class="@cls" @onclick="onClickCallback">
+        @text
+      </span>
+      break;
+    case LinkTypes.NextToName:
+      <span class="@cls"  @onclick="onClickCallback">
+        @text
+      </span>
+      <a href="@Href" class="@LinkClass">open</a>
+      break;
+    case LinkTypes.EntireName:
+      <span class="@cls">
+        <a href="@Href" class="@LinkClass">@text</a>
+      </span>
+      break;
+  }
+}
+@code {
+  [Parameter] public string Name { get; set; }
+  [Parameter] public string Href { get; set; }
+  [Parameter] public LinkTypes LinkType { get; set; } = LinkTypes.NextToName;
+  [Parameter] public Microsoft.AspNetCore.Components.EventCallback onClickCallback { get; set; }
+  [Parameter] public string ExtraClass { get; set; }
+  [Parameter] public string LinkClass { get; set; }
+
+  string text => Name ?? "no-name";
+  string cls => string.Join(" ", new List<string>() { "name-component", (string.IsNullOrEmpty(Name) ? "no-name" : null), ExtraClass });
+}

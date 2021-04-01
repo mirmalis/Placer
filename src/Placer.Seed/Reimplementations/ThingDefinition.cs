@@ -8,39 +8,31 @@ namespace Placer.Seed.Reimplementations
   {
     #region Constructors
     public ThingDefinition() { }
-    public ThingDefinition(Scope scope, string name) : base()
+    public ThingDefinition(Scope scope, string name, int x = 0, int y = 0, int z = 0) : base()
     {
       this.Scope = scope;
+      this.ScopeLocation = new Core.ScopeLocation(x, y, z);
+
       this.Name = name;
     }
     #endregion
     public ThingDefinition AddFieldDefinition(Core.FieldDefinition fieldDefinition)
     {
-      this.FieldDefinitionAssignments ??= new List<Core.ThingDefinition_FieldDefinition>();
-      var result = new Core.ThingDefinition_FieldDefinition() {
+      this.FieldDefinitionAssignments ??= new List<Core.FieldDefinitionAssignment<Core.ThingDefinition>>();
+      var result = new Core.FieldDefinitionAssignment<Core.ThingDefinition>()
+      {
         Definition = this,
         FieldDefinition = fieldDefinition
       };
       this.FieldDefinitionAssignments.Add(result);
       return this;
     }
-    public ThingDefinition AddRelationDefinition(Core.RelationDefinition relationDefinition)
-    {
-      this.RelationDefinitionAssignments ??= new List<Core.RelationDefinitionAssignment>();
-      var result = new Core.RelationDefinitionAssignment()
-      {
-        ThingDefinition = this,
-        RelationDefinition = relationDefinition
-      };
-      this.RelationDefinitionAssignments.Add(result);
-      return this;
-    }
     public ThingDefinition AddInstances(params Core.Idea[] ideas)
     {
-      this.Things ??= new List<Core.Thing>();
+      this.Instances ??= new List<Core.Thing>();
       foreach (var thing in ideas.Select(idea => (Core.Thing)new Thing(this, idea)))
       {
-        this.Things.Add(thing);
+        this.Instances.Add(thing);
       }
       return this;
     }

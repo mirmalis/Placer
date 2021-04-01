@@ -1,0 +1,28 @@
+﻿@using Api1.Types.ThingDefinition
+@inherits GG<I, Shallow, Deep, Guid>
+@inject Client client
+<Named Name="@Common?.Name"
+       Href="@($"/td/{ID}")"
+       LinkType="@this.LinkType"
+       onClickCallback="@ToggleExpand" />
+@if (Expanded)
+{
+  @if (IsDeep)
+  {
+    @if (Deep.Instances.Any())
+    {
+      <div>
+        Instances:
+        @foreach (var item in Deep.Instances)
+        {
+          <div>
+            <Placer.Wasm1.Components.Thing ParamID="@item.ID" ParamShallow="@item" ParamShowDefinition="false" ParamExpandable="false" />
+          </div>
+        }
+      </div>
+    }
+  }
+}
+@code {
+  protected override async Task<Deep> GetDeep() => await client.GetThingDefinition(ID);
+}

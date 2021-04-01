@@ -8,5 +8,7 @@ namespace Placer.Core
     public string Name { get; set; }
 
     public ICollection<ThingDefinition> ThingDefinitions { get; set; }
+    public ICollection<RelationDefinition> RelationDefinitions { get; set; }
+    public ICollection<Idea> Ideas { get; set; }
   }
 }

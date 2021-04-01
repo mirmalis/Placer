@@ -1,0 +1,35 @@
+﻿@page "/scopes"
+@inject Client client
+@inject NavigationManager NavigationManager
+<h3>Scopes</h3>
+@if (Elements != null)
+{
+  @foreach (var item in Elements)
+  {
+    <div>
+      <Placer.Wasm1.Components.Scope ParamID="@item.ID" ParamShallow="@item" />
+    </div>
+  }
+}
+<div>
+  <button @onclick="OnCreateButtonClick">Create</button>
+</div>
+
+@code {
+  public IEnumerable<Api1.Types.Scope.Shallow> Elements { get; set; }
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+    Elements = await client.GetScopes();
+  }
+  async Task OnCreateButtonClick()
+  {
+    await client.CreateScope(
+      new Api1.Types.Scope.Shallow() { 
+        ID = Guid.NewGuid(), 
+        Name = DateTime.Now.ToString() 
+      }
+    );
+    NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+  }
+}

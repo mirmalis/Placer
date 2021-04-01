@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace Placer.Core
 {
-  public class Thing : IDed
+  public class Thing : IDed, IInstance<ThingDefinition>
   {
-    public ThingDefinition Definition { get; set; } public Guid DefinitionID { get; set; }
     public Idea Idea { get; set; } public Guid IdeaID { get; set; }
+    public ThingDefinition Definition { get; set; } public Guid DefinitionID { get; set; }
 
+    public ICollection<Field<Thing>> FieldInstances { get; set; }
     public ICollection<Relation> RelationsFrom { get; set; }
     public ICollection<Relation> RelationsTo { get; set; }
-    public ICollection<FieldOfThing> FieldInstances { get; set; }
   }
 }

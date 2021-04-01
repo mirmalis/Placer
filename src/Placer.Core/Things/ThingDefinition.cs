@@ -5,14 +5,13 @@ using System.Text;
 
 namespace Placer.Core
 {
-  public class ThingDefinition : IDed
+  public class ThingDefinition : IDed, IDefinition<Thing>
   {
     public Scope Scope { get; set; } public Guid ScopeID { get; set; }
+    public ScopeLocation ScopeLocation { get; set; }
     public string Name { get; set; }
-    public ICollection<Thing> Things { get; set; }
+    public ICollection<FieldDefinitionAssignment<ThingDefinition>> FieldDefinitionAssignments { get; set; }
 
-
-    public ICollection<ThingDefinition_FieldDefinition> FieldDefinitionAssignments { get; set; }
-    public ICollection<RelationDefinitionAssignment> RelationDefinitionAssignments { get; set; }
+    public ICollection<Thing> Instances { get; set; }
   }
 }

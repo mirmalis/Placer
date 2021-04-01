@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Placer.Core
 {
-  public class ThingDefinition_FieldDefinition : IDed
+  public class FieldDefinitionAssignment<TTo> : IDed
+    where TTo: IDefinition
   {
-    public ThingDefinition Definition { get; set; } public Guid DefinitionID { get; set; }
+    public TTo Definition { get; set; } public Guid DefinitionID { get; set; }
     public FieldDefinition FieldDefinition { get; set; } public Guid FieldDefinitionID { get; set; }
   }
 }

@@ -11,7 +11,7 @@ namespace Placer.Core
   {
     public enum DataType
     {
-      Unknown, String, Integer, DateTime
+      Unknown, Flag, Boolean, Integer, String, DateTime
     }
     public DataType Type { get; set; }
     public byte[] Data { get; set; }
@@ -40,8 +40,8 @@ namespace Placer.Core
     {
       get
       {
-        if (Type != DataType.Integer)
-          return null;
+        //if (Type != DataType.Integer)
+        //  return null;
         return BitConverter.ToInt32(this.Data);
       }
       set
@@ -77,17 +77,16 @@ namespace Placer.Core
     public static implicit operator Value(string value) => new() { String = value };
     public static implicit operator Value(int value) => new() { Integer = value };
     public static implicit operator Value(DateTime value) => new() { DateTime = value };
-    public static implicit operator Value(bool value) => new() { Integer = value ? 1 : 0 };
-    public override string ToString()
-    {
-      if (Type == DataType.String)
-        return $"\"{String.Replace("\"", "\\\"")}\"";
-      if (Integer != null)
-        return Integer.ToString();
-      if (DateTime != null)
-        return DateTime.ToString();
-      return Data.ToString();
-    }
+    public static implicit operator Value(bool value) => new() { Integer = value ? 1 : 0, Type = DataType.Boolean };
+    public override string ToString() =>
+     this.Type switch
+     {
+       DataType.String => $"\"{String.Replace("\"", "\\\"")}\"",
+       DataType.Integer => Integer.ToString(),
+       DataType.Boolean => Integer.ToString(),
+       DataType.DateTime => DateTime.ToString(),
+       _ => Data.ToString()
+     };
     #endregion
   }
 }

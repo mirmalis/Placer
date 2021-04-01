@@ -1,0 +1,6 @@
+﻿@page "/td/{ID:guid}" 
+<Placer.Wasm1.Components.ThingDefinition ParamID="@ID" ParamIsTopLevel="true"/>
+
+@code {
+  [Parameter] public Guid ID { get; set; }
+}

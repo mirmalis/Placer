@@ -8,16 +8,18 @@ namespace Placer.Seed.Reimplementations
   {
     #region Constructors
     public RelationDefinition() { }
-    public RelationDefinition(string forwards, string backwards) : base()
+    public RelationDefinition(Core.Scope scope, string forwards, string backwards, int x = 0, int y = 0, int z = 0) : base()
     {
+      this.Scope = scope;
+      this.ScopeLocation = new Core.ScopeLocation(x, y, z);
       this.Forward = forwards;
       this.Backwards = backwards;
     }
     #endregion
     public RelationDefinition AddFieldDefinition(Core.FieldDefinition fieldDefinition)
     {
-      this.FieldDefinitionAssignments ??= new List<Core.RelationDefinition_FieldDefinition>();
-      var result = new Core.RelationDefinition_FieldDefinition()
+      this.FieldDefinitionAssignments ??= new List<Core.FieldDefinitionAssignment<Core.RelationDefinition>>();
+      var result = new Core.FieldDefinitionAssignment<Core.RelationDefinition>()
       {
         Definition = this,
         FieldDefinition = fieldDefinition

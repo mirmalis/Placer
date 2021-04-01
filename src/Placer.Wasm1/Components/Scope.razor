@@ -1,0 +1,60 @@
+﻿@using Api1.Types.Scope
+@inherits GG<I, Shallow, Deep, Guid>
+@inject Client client
+@inject NavigationManager NavigationManager
+
+@if (ParamIsTopLevel && Common?.Parent != null)
+{
+  <a href=@($"/scope/{Common.Parent.ID}")>up</a>
+}
+
+<Named Name="@Common?.Name"
+       Href="@($"/scope/{ID}")"
+       LinkType="@this.LinkType"
+       onClickCallback="@ToggleExpand" />
+
+@if (ParamIsTopLevel)
+{
+  <button @onclick="Delete">delete</button>
+}
+@if (Expanded)
+{
+  @if (IsDeep)
+  {
+    @if (Deep.ThingDefinitions.Any())
+    {
+      @foreach (var group in Deep.ThingDefinitions.GroupBy(item => item.Scope.Y).OrderByDescending(item => item.Key))
+      {
+        <div>
+          @group.Key
+          @foreach (var td in group.OrderByDescending(item => item.Scope.X))
+          {
+            <span style="padding: 0 4px 0 0">
+              <Placer.Wasm1.Components.ThingDefinition ParamID="@td.ID" ParamShallow="@td" ParamExpandable="false" />
+            </span>
+          }
+        </div>
+      }
+    }
+    @foreach (var child in Deep.Children)
+    {
+      <div>
+        <Placer.Wasm1.Components.Scope ParamID="@child.ID" ParamShallow="@child" />
+      </div>
+    }
+  }
+}
+
+
+@code {
+  protected override async Task<Deep> GetDeep() => await client.GetScope(ID);
+  async Task<bool> Delete()
+  {
+    var x = await client.DeleteScope(ID);
+    if (x.IsSuccessStatusCode)
+    {
+      NavigationManager.NavigateTo("/scopes");
+    }
+    return x.IsSuccessStatusCode;
+  }
+}

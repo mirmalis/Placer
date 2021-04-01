@@ -1,0 +1,5 @@
+﻿@page "/scope/{ID:guid}"
+<Placer.Wasm1.Components.Scope ParamID="@ID" ParamIsTopLevel="true" />
+@code {
+  [Parameter] public Guid ID { get; set; }
+}

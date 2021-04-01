@@ -1,0 +1,100 @@
+﻿@using Api1.Types.Thing
+@inherits GG<I, Shallow, Deep, Guid>
+@inject Client client
+
+@if (!ParamIsTopLevel)
+{
+
+  @if (ParamIdeaAsName)
+  {
+    <Named Name="@Common?.Idea?.Name"
+           Href="@($"/t/{ID}")"
+           LinkType="@this.LinkType"
+           onClickCallback="@ToggleExpand" />
+  }
+  else if (ParamDefinitionAsName)
+  {
+    <Named Name="@Common?.Definition?.Name"
+           Href="@($"/t/{ID}")"
+           LinkType="@this.LinkType"
+           onClickCallback="@ToggleExpand" />
+  }
+  else
+  {
+    <Named Name="@ParamName"
+           Href="@($"/t/{ID}")"
+           LinkType="@this.LinkType"
+           onClickCallback="@ToggleExpand" />
+  }
+}
+@if (Common != null)
+{
+  @if (ParamShowDefinition && !ParamDefinitionAsName)
+  {
+    <span style="margin: 0 4px 0 0">
+      <Placer.Wasm1.Components.ThingDefinition ParamShallow="@Common?.Definition" ParamExpandable="false" ParamExpanded="false" />
+    </span>
+  }
+  @if (ParamShowIdea && !ParamIdeaAsName)
+  {
+    <span style="margin: 0 4px">
+      <Placer.Wasm1.Components.Idea ParamShallow="@Common?.Idea" ParamExpandable="false" ParamExpanded="false" />
+    </span>
+  }
+  @if (Expanded)
+  {
+    @if (IsDeep)
+    {
+      <div>
+        @foreach (var item in Deep.Fields)
+        {
+          <span style="border: solid black 1px">
+            @item.String @item.FieldDefinition.Name
+          </span>
+        }
+      </div>
+      <div>
+        @foreach (var item in Deep.RelationsFrom)
+        {
+          <div>
+            [@item.Definition.Forward]
+            <span style="border: solid black 1px;">
+              <Placer.Wasm1.Components.Thing ParamID="@item.To.ID" ParamExpandable="false" ParamExpanded="false" ParamShowDefinition="false" ParamIdeaAsName="true" />
+              <span>
+                @foreach (var f in item.Fields)
+                {
+                  <text>@f.FieldDefinition.Name: @f.String</text>
+                }
+              </span>
+            </span>
+          </div>
+        }
+      </div>
+      <div>
+        @foreach (var item in Deep.RelationsTo)
+        {
+          <div>
+            [@item.Definition.Backward]
+            <span style="border: solid black 1px;">
+              <Placer.Wasm1.Components.Thing ParamID="@item.From.ID" ParamExpandable="false" ParamExpanded="false" ParamShowDefinition="false" ParamIdeaAsName="true" />
+              <span>
+                @foreach (var f in item.Fields)
+                {
+                  <text>@f.FieldDefinition.Name: @f.String</text>
+                }
+              </span>
+            </span>
+          </div>
+        }
+      </div>
+    }
+  }
+}
+@code {
+  [Parameter] public bool ParamIdeaAsName { get; set; } = false;
+  [Parameter] public bool ParamDefinitionAsName { get; set; } = false;
+  [Parameter] public string ParamName { get; set; } = "open";
+  [Parameter] public bool ParamShowIdea { get; set; } = true;
+  [Parameter] public bool ParamShowDefinition { get; set; } = true;
+  protected override async Task<Deep> GetDeep() => await client.GetThing(ID);
+}

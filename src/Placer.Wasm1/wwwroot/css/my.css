@@ -1,0 +1,20 @@
+﻿.name-component {
+  margin: 0 1px 0 1px;
+}
+
+  .name-component.no-name {
+    background-color: palevioletred;
+  }
+
+.switch {
+  padding: 4px;
+  margin: 1px auto;
+}
+
+  .switch.enabled {
+    background-color: green;
+  }
+
+  .switch.disabled {
+    background-color: red;
+  }
