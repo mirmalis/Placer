@@ -4,7 +4,9 @@
 <Named Name="@Common?.Name"
        Href="@($"/idea/{ID}")"
        LinkType="@this.LinkType"
-       onClickCallback="@ToggleExpand" />
+       onClickCallback="@ToggleExpand" 
+       >
+</Named>
 
 @if (Expanded)
 {
@@ -15,8 +17,9 @@
       @foreach (var item in Deep.Things)
       {
         <div>
-          <Placer.Wasm1.Components.Thing ParamID="@item.ID" ParamShallow="@item" ParamShowIdea="false" ParamExpandable="false" 
-                                         ParamDefinitionAsName="true"
+          <Placer.Wasm1.Components.Thing ParamHideIdea="true"
+                                         ParamID="@item.ID" ParamShallow="@item" 
+                                         ParamExpandable="false"
                                          />
         </div>
       }

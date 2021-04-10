@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Placer.Seed.Reimplementations
 {
@@ -16,6 +17,26 @@ namespace Placer.Seed.Reimplementations
       this.Backwards = backwards;
     }
     #endregion
+    public RelationDefinition AddRestriction(Core.RelationDefinitionRestriction.RestrictionType type, Core.ThingDefinition from, Core.ThingDefinition to)
+    {
+      return AddRestriction(
+        type,
+        new List<Core.ThingDefinition>() { from },
+        new List<Core.ThingDefinition>() { to }
+      );
+    }
+    public RelationDefinition AddRestriction(Core.RelationDefinitionRestriction.RestrictionType type, IEnumerable<Core.ThingDefinition> froms, IEnumerable<Core.ThingDefinition> tos)
+    {
+      this.RelationDefinitionRestrictions ??= new List<Core.RelationDefinitionRestriction>();
+      ;
+      var result = new Core.RelationDefinitionRestriction()
+      {
+        FromThingTypes = froms.Select(item => new Core.RelationDefinitionRestrictionFrom() { ThingDefinition = item }).ToList(),
+        ToThingTypes = froms.Select(item => new Core.RelationDefinitionRestrictionTo() { ThingDefinition = item }).ToList(),
+        Type = type
+      };
+      return this;
+    }
     public RelationDefinition AddFieldDefinition(Core.FieldDefinition fieldDefinition)
     {
       this.FieldDefinitionAssignments ??= new List<Core.FieldDefinitionAssignment<Core.RelationDefinition>>();

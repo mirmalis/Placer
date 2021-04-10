@@ -13,5 +13,9 @@ namespace Placer.Core
     public ICollection<FieldDefinitionAssignment<ThingDefinition>> FieldDefinitionAssignments { get; set; }
 
     public ICollection<Thing> Instances { get; set; }
+    public ICollection<Format> Formats { get; set; }
+
+    public ICollection<RelationDefinitionRestrictionFrom> RelationDefinitionRestrictionsFrom { get; set; }
+    public ICollection<RelationDefinitionRestrictionTo> RelationDefinitionRestrictionsTo { get; set; }
   }
 }

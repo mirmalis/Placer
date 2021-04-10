@@ -7,7 +7,7 @@
   @foreach (var item in Elements)
   {
     <div>
-      <Placer.Wasm1.Components.Scope ParamID="@item.ID" ParamShallow="@item" />
+      <Placer.Wasm1.Components.Scope ParamID="@item.ID" ParamShallow="@item" ParamExpanded="true" />
     </div>
   }
 }
@@ -25,9 +25,10 @@
   async Task OnCreateButtonClick()
   {
     await client.CreateScope(
-      new Api1.Types.Scope.Shallow() { 
-        ID = Guid.NewGuid(), 
-        Name = DateTime.Now.ToString() 
+      new Api1.Types.Scope.Shallow()
+      {
+        ID = Guid.NewGuid(),
+        Name = DateTime.Now.ToString()
       }
     );
     NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);

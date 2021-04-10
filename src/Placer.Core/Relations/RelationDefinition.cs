@@ -12,6 +12,7 @@ namespace Placer.Core
     public string Forward { get; set; }
     public string Backwards { get; set; }
 
+    public ICollection<RelationDefinitionRestriction> RelationDefinitionRestrictions { get; set; }
     public ICollection<FieldDefinitionAssignment<RelationDefinition>> FieldDefinitionAssignments { get; set; }
 
     public ICollection<Relation> Instances { get; set; }

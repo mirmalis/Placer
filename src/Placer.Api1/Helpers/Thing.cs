@@ -29,8 +29,10 @@ namespace Placer.Api1.Helpers.Thing
           }
         )
       ;
-      this.RelationsFrom = core.RelationsFrom.Select(item => new Relation.Deep(null, item));
-      this.RelationsTo = core.RelationsTo.Select(item => new Relation.Deep(null, item));
+      //this.RelationsFrom = core.RelationsFrom.Select(item => new Relation.Deep(null, item));
+      //this.RelationsTo = core.RelationsTo.Select(item => new Relation.Deep(null, item));
+      this.Start = core.Start;
+      this.End = core.End;
     }
     #endregion
     public static IQueryable<Core.Thing> Includes(IQueryable<Core.Thing> Q)
@@ -40,8 +42,10 @@ namespace Placer.Api1.Helpers.Thing
       .Include(item => item.FieldInstances).ThenInclude(item => item.Definition)
       .Include(item => item.RelationsFrom).ThenInclude(item => item.Definition)
       .Include(item => item.RelationsFrom).ThenInclude(item => item.FieldInstances).ThenInclude(item => item.Definition)
+      .Include(item => item.RelationsFrom).ThenInclude(item => item.To).ThenInclude(item => item.Definition)
       .Include(item => item.RelationsTo).ThenInclude(item => item.Definition)
       .Include(item => item.RelationsTo).ThenInclude(item => item.FieldInstances).ThenInclude(item => item.Definition)
+      .Include(item => item.RelationsTo).ThenInclude(item => item.From).ThenInclude(item => item.Definition)
     ;
   }
   public class Shallow : Types.Thing.Shallow
@@ -55,6 +59,8 @@ namespace Placer.Api1.Helpers.Thing
         return;
       this.Definition = new ThingDefinition.Shallow(core.DefinitionID, core.Definition);
       this.Idea = new Idea.Shallow(core.IdeaID, core.Idea);
+      this.Start = core.Start;
+      this.End = core.End;
     }
     #endregion
     public static IQueryable<Core.Thing> Includes(IQueryable<Core.Thing> Q)

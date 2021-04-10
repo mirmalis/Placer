@@ -28,6 +28,9 @@ namespace Placer.Api1.Helpers.Relation
     #endregion
     public static IQueryable<Core.Relation> Includes(IQueryable<Core.Relation> Q)
       => Q
+      .Include(item => item.Definition)
+      .Include(item => item.From).ThenInclude(item => item.Idea)
+      .Include(item => item.To).ThenInclude(item => item.Idea)
     ;
   }
   public class Shallow : Types.Relation.Shallow
@@ -46,6 +49,11 @@ namespace Placer.Api1.Helpers.Relation
     #endregion
     public static IQueryable<Core.Relation> Includes(IQueryable<Core.Relation> Q)
       => Q
+      .Include(item => item.Definition)
+      .Include(item => item.From).ThenInclude(item => item.Idea)
+      .Include(item => item.From).ThenInclude(item => item.Definition)
+      .Include(item => item.To).ThenInclude(item => item.Idea)
+      .Include(item => item.To).ThenInclude(item => item.Definition)
     ;
   }
 }

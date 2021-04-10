@@ -7,7 +7,7 @@
 {
   <a href=@($"/scope/{Common.Parent.ID}")>up</a>
 }
-
+<b>S</b>
 <Named Name="@Common?.Name"
        Href="@($"/scope/{ID}")"
        LinkType="@this.LinkType"
@@ -21,26 +21,25 @@
 {
   @if (IsDeep)
   {
-    @if (Deep.ThingDefinitions.Any())
-    {
-      @foreach (var group in Deep.ThingDefinitions.GroupBy(item => item.Scope.Y).OrderByDescending(item => item.Key))
-      {
-        <div>
-          @group.Key
-          @foreach (var td in group.OrderByDescending(item => item.Scope.X))
-          {
-            <span style="padding: 0 4px 0 0">
-              <Placer.Wasm1.Components.ThingDefinition ParamID="@td.ID" ParamShallow="@td" ParamExpandable="false" />
-            </span>
-          }
-        </div>
-      }
-    }
     @foreach (var child in Deep.Children)
     {
       <div>
         <Placer.Wasm1.Components.Scope ParamID="@child.ID" ParamShallow="@child" />
       </div>
+    }
+    @if (Deep.ThingDefinitions.Any())
+    {
+      @foreach (var group in Deep.ThingDefinitions.GroupBy(item => item.Scope.Y).OrderByDescending(item => item.Key))
+      {
+        <div>
+          @foreach (var td in group.OrderByDescending(item => item.Scope.X))
+          {
+            <span style="padding: 0 4px 0 0">
+              <Placer.Wasm1.Components.ThingDefinition ParamID="@td.ID" ParamShallow="@td" />
+            </span>
+          }
+        </div>
+      }
     }
   }
 }

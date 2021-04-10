@@ -1,6 +1,7 @@
 ﻿@page "/idea/{ID:guid}"
 <Placer.Wasm1.Components.Idea ParamID="@ID" ParamIsTopLevel="true" />
 
+
 @code {
   [Parameter] public Guid ID { get; set; }
 }

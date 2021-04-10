@@ -5,6 +5,7 @@
   <span class="@cls" @onclick="onClickCallback">
     @text
   </span>
+  @InnerElement
 }
 else
 {
@@ -14,10 +15,12 @@ else
       <span class="@cls" @onclick="onClickCallback">
         @text
       </span>
+      @InnerElement
       break;
     case LinkTypes.NextToName:
-      <span class="@cls"  @onclick="onClickCallback">
+      <span class="@cls" @onclick="onClickCallback">
         @text
+        @InnerElement
       </span>
       <a href="@Href" class="@LinkClass">open</a>
       break;
@@ -25,6 +28,7 @@ else
       <span class="@cls">
         <a href="@Href" class="@LinkClass">@text</a>
       </span>
+      @InnerElement
       break;
   }
 }
@@ -35,7 +39,8 @@ else
   [Parameter] public Microsoft.AspNetCore.Components.EventCallback onClickCallback { get; set; }
   [Parameter] public string ExtraClass { get; set; }
   [Parameter] public string LinkClass { get; set; }
-
+  [Parameter] public RenderFragment InnerElement { get; set; }
   string text => Name ?? "no-name";
-  string cls => string.Join(" ", new List<string>() { "name-component", (string.IsNullOrEmpty(Name) ? "no-name" : null), ExtraClass });
+  bool noName => Name == null;
+  string cls => string.Join(" ", new List<string>() { "name-component", (noName ? "no-name" : null), ExtraClass });
 }

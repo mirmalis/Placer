@@ -8,6 +8,7 @@ namespace Placer.Core
   {
     public string Name { get; set; }
     public Value.DataType DataType { get; set; }
+    public bool? IsTimeSeries { get; set; }
     //public ICollection<Definition_FieldDefinition<TDefinition>> ThingDefinition_FieldDefinition { get; set; }
   }
 }

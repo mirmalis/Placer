@@ -4,19 +4,28 @@
 <Named Name="@Common?.Name"
        Href="@($"/td/{ID}")"
        LinkType="@this.LinkType"
-       onClickCallback="@ToggleExpand" />
+       onClickCallback="@ToggleExpand"
+>
+
+</Named>
+@if (Common != null)
+{
+  @if (ParamIsTopLevel)
+  {
+    <a href=@($"/scope/{Common.Scope.Scope.ID}")>scope</a>
+  }
+}
 @if (Expanded)
 {
   @if (IsDeep)
   {
     @if (Deep.Instances.Any())
     {
-      <div>
-        Instances:
-        @foreach (var item in Deep.Instances)
+      <div style="border: solid black 1px">
+        @foreach (var item in Deep.Instances.OrderByDescending(item => item.Start))
         {
           <div>
-            <Placer.Wasm1.Components.Thing ParamID="@item.ID" ParamShallow="@item" ParamShowDefinition="false" ParamExpandable="false" />
+            <Placer.Wasm1.Components.Thing ParamID="@item.ID" ParamShallow="@item" ParamHideDefinition="true" />
           </div>
         }
       </div>

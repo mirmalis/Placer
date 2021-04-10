@@ -73,7 +73,7 @@ namespace Placer.Seed
       ;
       #endregion
       public static ThingDefinition Spell = new ThingDefinition(e5, "Spell", 10, 10)
-        .AddFieldDefinition(level)
+        .AddFieldDefinitions(level)
       ;
       #region Schools
       public static ThingDefinition School = new(e5, "School");

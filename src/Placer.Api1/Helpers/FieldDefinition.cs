@@ -14,6 +14,8 @@ namespace Placer.Api1.Helpers.FieldDefinition
       this.ID = Calc.ID(id, core);
       if (core == null)
         return;
+      this.Name = core.Name;
+      this.IsTimeSeries = core.IsTimeSeries;
     }
     #endregion
     public static IQueryable<Core.FieldDefinition> Includes(IQueryable<Core.FieldDefinition> Q)
@@ -30,6 +32,7 @@ namespace Placer.Api1.Helpers.FieldDefinition
       if (core == null)
         return;
       this.Name = core.Name;
+      this.IsTimeSeries = core.IsTimeSeries;
     }
     #endregion
     public static IQueryable<Core.FieldDefinition> Includes(IQueryable<Core.FieldDefinition> Q)

@@ -17,9 +17,12 @@ namespace Placer.Seed.Reimplementations
       }
       this.Name = name;
     }
+    public Idea(string name, int x = 0, int y = 0, int z = 0) : this(null, name, x, y, z)
+    {
+    }
     #endregion
     public Thing DefinitionAssignment => (Thing)Things.Last(item => true);
-    public Thing AddDefinition(ThingDefinition definition)
+    public Thing AddDefinition(Core.ThingDefinition definition)
     {
       if (definition == null)
       {

@@ -1,100 +1,163 @@
 ﻿@using Api1.Types.Thing
+@using System.Linq;
 @inherits GG<I, Shallow, Deep, Guid>
 @inject Client client
 
-@if (!ParamIsTopLevel)
+@if (ParamIsTopLevel)
 {
-
-  @if (ParamIdeaAsName)
+  @if (Common != null)
   {
-    <Named Name="@Common?.Idea?.Name"
-           Href="@($"/t/{ID}")"
-           LinkType="@this.LinkType"
-           onClickCallback="@ToggleExpand" />
+    <Placer.Wasm1.Components.ThingDefinition ParamID="Common?.Definition.ID" ParamShallow="Common?.Definition" ParamExpandable="false" />
+    <Placer.Wasm1.Components.Idea ParamID="Common?.Idea.ID" ParamShallow="Common?.Idea" ParamExpandable="false" />
+    <br/>
   }
-  else if (ParamDefinitionAsName)
-  {
-    <Named Name="@Common?.Definition?.Name"
-           Href="@($"/t/{ID}")"
-           LinkType="@this.LinkType"
-           onClickCallback="@ToggleExpand" />
-  }
-  else
-  {
-    <Named Name="@ParamName"
-           Href="@($"/t/{ID}")"
-           LinkType="@this.LinkType"
-           onClickCallback="@ToggleExpand" />
-  }
+}
+else
+{
+  @Named
+}
+@if (Expanded)
+{
+  <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+    @if (Deep?.Fields?.Any() == true)
+    {
+      <div type="button" class="btn btn-primary" @onclick="@(() => ShowFields = !ShowFields)">fields</div>
+    }
+    <div type="button" class="btn btn-secondary btn-sm" @onclick="() => toggleShowRelations(null)">relations</div>
+  </div>
 }
 @if (Common != null)
 {
-  @if (ParamShowDefinition && !ParamDefinitionAsName)
-  {
-    <span style="margin: 0 4px 0 0">
-      <Placer.Wasm1.Components.ThingDefinition ParamShallow="@Common?.Definition" ParamExpandable="false" ParamExpanded="false" />
-    </span>
-  }
-  @if (ParamShowIdea && !ParamIdeaAsName)
-  {
-    <span style="margin: 0 4px">
-      <Placer.Wasm1.Components.Idea ParamShallow="@Common?.Idea" ParamExpandable="false" ParamExpanded="false" />
-    </span>
-  }
   @if (Expanded)
   {
     @if (IsDeep)
     {
-      <div>
-        @foreach (var item in Deep.Fields)
-        {
-          <span style="border: solid black 1px">
-            @item.String @item.FieldDefinition.Name
-          </span>
-        }
-      </div>
-      <div>
-        @foreach (var item in Deep.RelationsFrom)
-        {
-          <div>
-            [@item.Definition.Forward]
-            <span style="border: solid black 1px;">
-              <Placer.Wasm1.Components.Thing ParamID="@item.To.ID" ParamExpandable="false" ParamExpanded="false" ParamShowDefinition="false" ParamIdeaAsName="true" />
-              <span>
-                @foreach (var f in item.Fields)
-                {
-                  <text>@f.FieldDefinition.Name: @f.String</text>
-                }
-              </span>
+      @if (ShowFields && Deep.Fields.Any())
+      {
+        <div>
+          @foreach (var item in Deep.Fields)
+          {
+            <span style="border: solid black 1px">
+              @item.FieldDefinition.Name @item.String
             </span>
-          </div>
-        }
-      </div>
-      <div>
-        @foreach (var item in Deep.RelationsTo)
-        {
-          <div>
-            [@item.Definition.Backward]
-            <span style="border: solid black 1px;">
-              <Placer.Wasm1.Components.Thing ParamID="@item.From.ID" ParamExpandable="false" ParamExpanded="false" ParamShowDefinition="false" ParamIdeaAsName="true" />
-              <span>
-                @foreach (var f in item.Fields)
-                {
-                  <text>@f.FieldDefinition.Name: @f.String</text>
-                }
-              </span>
-            </span>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
+      @if (ShowRelations && (RelationsFrom.Any() || RelationsTo.Any()))
+      {
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th scope="col">RelationDefinition</th>
+              <th scope="col">ThingDefintion</th>
+              <th scope="col">Thing</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var item in RelationsFrom?.OrderBy(item => item.To.Start))
+            {
+              <tr>
+                <th scope="row">
+                  @item.Definition.Forward
+                  @*@foreach (var f in item.Fields)
+                    {
+                      <text>@f.FieldDefinition.Name: @f.String</text>
+                    }*@
+                </th>
+                <td>
+                  <Placer.Wasm1.Components.ThingDefinition ParamID="@item.To.Definition.ID" ParamShallow="@item.To.Definition" ParamExpandable="false" />
+                </td>
+                <td>
+                  <Placer.Wasm1.Components.Thing ParamID="@item.To.ID" ParamShallow="@item.To" ParamExpandable="false" ParamExpanded="false" ParamHideDefinition="true" />
+                </td>
+              </tr>
+            }
+            @foreach (var item in RelationsTo?.OrderBy(item => item.From.Start))
+            {
+              <tr>
+                <th scope="row">
+                  @item.Definition.Backward
+                  @*@foreach (var f in item.Fields)
+                    {
+                      <text>@f.FieldDefinition.Name: @f.String</text>
+                    }*@
+                </th>
+                <td>
+                  <Placer.Wasm1.Components.ThingDefinition ParamID="@item.From.Definition.ID" ParamShallow="@item.From.Definition" ParamExpandable="false" />
+                </td>
+                <td>
+                  <Placer.Wasm1.Components.Thing ParamID="@item.From.ID" ParamShallow="@item.From" ParamExpandable="false" ParamExpanded="false" ParamHideDefinition="true" />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     }
   }
 }
 @code {
-  [Parameter] public bool ParamIdeaAsName { get; set; } = false;
-  [Parameter] public bool ParamDefinitionAsName { get; set; } = false;
-  [Parameter] public string ParamName { get; set; } = "open";
-  [Parameter] public bool ParamShowIdea { get; set; } = true;
-  [Parameter] public bool ParamShowDefinition { get; set; } = true;
+  [Parameter] public bool ParamHideDefinition { get; set; } = false;
+  [Parameter] public bool ParamHideIdea { get; set; } = false;
+
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+    await toggleShowRelations(ParamIsTopLevel);
+  }
+  #region Rendering Helpers
+  IEnumerable<Api1.Types.Relation.Shallow> RelationsFrom { get; set; }
+  IEnumerable<Api1.Types.Relation.Shallow> RelationsTo { get; set; }
+  bool ShowFields { get; set; } = false;
+  async Task toggleShowRelations(bool? value = null)
+  {
+    if (value == null)
+    {
+      value = !ShowRelations;
+    }
+    if (value.Value)
+    {
+      RelationsFrom = await client.GetRelations(ID, null, null);
+      RelationsTo = await client.GetRelations(null, null, ID);
+    }
+    this.ShowRelations = value.Value;
+  }
+  bool ShowRelations { get; set; }
+
   protected override async Task<Deep> GetDeep() => await client.GetThing(ID);
+
+  string name
+  {
+    get
+    {
+      if (!this.ParamHideDefinition && !this.ParamHideIdea)
+      {
+        return $"{this.Common?.Definition?.Name} {this.Common?.Idea?.Name}";
+      }
+      if (!this.ParamHideDefinition)
+      {
+        return this.Common?.Definition?.Name;
+
+      }
+      else if (!this.ParamHideIdea)
+      {
+        return this.Common?.Idea?.Name;
+      }
+      return "swx";
+    }
+  }
+  RenderFragment Named
+  {
+    get
+    {
+      return@<Named Name=@this.name
+                    Href=@($"/t/{ID}")
+                    LinkType=@this.LinkType
+                    onClickCallback=ToggleExpand>
+      </Named>;
 }
+}
+#endregion
+
+}
+
